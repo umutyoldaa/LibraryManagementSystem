@@ -7,6 +7,19 @@
 # BlueJ files
 *.ctxt
 
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Build output
+out/
+target/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
