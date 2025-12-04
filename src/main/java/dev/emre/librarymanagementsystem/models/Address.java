@@ -23,6 +23,15 @@ public class Address {
     public String getZipCode() {
         return zipCode;
     }
+    public void setCity(String city) {
+        this.city = city;
+    }
+    public void setStreet(String street) {
+        this.street = street;
+    }
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
     @Override
     public String toString() {
         return String.format("%s %s %s", city, street, zipCode);
