@@ -1,5 +1,6 @@
 package dev.emre.librarymanagementsystem.models;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -7,14 +8,14 @@ public class Person {
     private long id;
     private String name;
     private String surname;
-    private Date birthDate;
+    private LocalDate birthDate;
     private Address address;
 
     public Person(
             String name,
             String surname,
-            Date birthDate,
-            Address adress
+            LocalDate birthDate,
+            Address address
     ){
         this.name = name;
         this.surname = surname;
@@ -40,21 +41,21 @@ public class Person {
     public void setSurname(String surname) {
         this.surname = surname;
     }
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
     public Address getAdress() {
         return address;
     }
-    public void setAdress(Address address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
     @Override
     public String toString() {
-        return String.format("%s %s %d", name, surname, birthDate);
+        return String.format("%s %s, geboren %s ", name, surname, birthDate);
     }
 
 }
