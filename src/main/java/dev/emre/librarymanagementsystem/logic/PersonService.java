@@ -10,6 +10,7 @@ import java.util.Optional;
 public class PersonService {
     private final List<Person> persons = new ArrayList<>();
     private long nextId = 1;
+    public PersonService(){}
     public List<Person> getAllPersons(){
         return new ArrayList<>(persons);
     }

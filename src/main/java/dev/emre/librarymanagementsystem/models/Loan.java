@@ -57,5 +57,16 @@ public class Loan {
         }
         return false;
     }
+    @Override
+    public String toString() {
+        return "Loan{id=" + id +
+                ", person=" + person.getName() +
+                ", book=" + book.getTitle() +
+                ", loanDate=" + loanDate +
+                ", dueDate=" + getDueDate() +
+                ", returned=" + isReturned +
+                '}';
+    }
+
 
 }

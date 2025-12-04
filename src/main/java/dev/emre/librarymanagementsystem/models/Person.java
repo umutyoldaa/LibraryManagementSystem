@@ -22,6 +22,7 @@ public class Person {
         this.birthDate = birthDate;
         this.address = address;
     }
+    public Person(){}
 
     public long getId() {
         return id;

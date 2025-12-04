@@ -26,7 +26,7 @@ public class LoanService {
     public Optional<Loan> createLoan(long bookid, long personId, LocalDate loanDate) {
         Optional<Book> bookOpt = bookService.getBookById(bookid);
         Optional<Person> personOpt = personService.getPersonById(personId);
-        if(bookOpt.isEmpty() && personOpt.isEmpty()) {
+        if(bookOpt.isEmpty() || personOpt.isEmpty()) {
             return Optional.empty();
         }
         Loan loan = new Loan(personOpt.get(), bookOpt.get(), loanDate);
