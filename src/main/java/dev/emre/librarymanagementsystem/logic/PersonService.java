@@ -30,4 +30,7 @@ public class PersonService {
     public Optional<Person> getPersonByName(String name){
         return persons.stream().filter(person -> person.getName().equals(name)).findFirst();
     }
+    public Optional<Person> getPersonBySurname(String surname){
+        return persons.stream().filter(person -> person.getSurname().equals(surname)).findFirst();
+    }
 }
