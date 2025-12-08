@@ -1,5 +1,6 @@
 package dev.emre.librarymanagementsystem.models;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -56,6 +57,23 @@ public class Loan {
             return true;
         }
         return false;
+    }
+    public BigDecimal calculateFine(LocalDate returnDate, boolean damaged) {
+        BigDecimal fee = BigDecimal.ZERO;
+        long dayslate = getDaysOverdue(returnDate);
+        if(dayslate > 0){
+          long weekLate = (dayslate + 6) / 7;
+          fee = fee.add(BigDecimal.valueOf(weekLate * 2));
+        }
+        if(damaged){
+            fee = fee.add(BigDecimal.valueOf(10));
+        }
+        return fee;
+
+    }
+    public long getDaysOverdue(LocalDate date) {
+        if (!isOverdue(date)) return 0;
+        return java.time.temporal.ChronoUnit.DAYS.between(getDueDate(), date);
     }
 
 }
