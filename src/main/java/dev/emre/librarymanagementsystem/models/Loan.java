@@ -57,5 +57,10 @@ public class Loan {
         }
         return false;
     }
+    public long getDaysOverdue(LocalDate date) {
+        if(!isOverdue(date)) return 0;
+        return java.time.temporal.ChronoUnit.DAYS.between(loanDate, date);
+
+    }
 
 }
