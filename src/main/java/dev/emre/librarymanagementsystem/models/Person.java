@@ -54,11 +54,23 @@ public class Person {
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
-    public Address getAdress() {
+    public Address getAddress() {
         return address;
     }
     public void setAddress(Address address) {
         this.address = address;
+    }
+    public void addFees(BigDecimal fees) {
+        if(fees == null || fees.compareTo(BigDecimal.ZERO) <= 0 ) return;
+        this.openFees = this.openFees.add(fees);
+    }
+    public void payFees(BigDecimal fees) {
+        if(fees == null || fees.compareTo(BigDecimal.ZERO) <= 0 ) return;
+        this.openFees = this.openFees.subtract(fees);
+        if(this.openFees.compareTo(BigDecimal.ZERO) < 0) this.openFees = BigDecimal.ZERO;
+    }
+    public boolean hasOpenFees() {
+        return openFees != null && this.openFees.compareTo(BigDecimal.ZERO) > 0;
     }
     @Override
     public String toString() {
