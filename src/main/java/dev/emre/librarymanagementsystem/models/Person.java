@@ -1,5 +1,6 @@
 package dev.emre.librarymanagementsystem.models;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
@@ -10,6 +11,7 @@ public class Person {
     private String surname;
     private LocalDate birthDate;
     private Address address;
+    private BigDecimal openFees = BigDecimal.ZERO;
 
     public Person(
             String name,
@@ -22,7 +24,12 @@ public class Person {
         this.birthDate = birthDate;
         this.address = address;
     }
-
+    public BigDecimal getOpenFees() {
+        return openFees;
+    }
+    public void setOpenFees(BigDecimal openFees) {
+        this.openFees = openFees;
+    }
     public long getId() {
         return id;
     }

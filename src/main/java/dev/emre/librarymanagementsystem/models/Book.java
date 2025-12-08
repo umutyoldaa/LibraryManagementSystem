@@ -1,5 +1,6 @@
 package dev.emre.librarymanagementsystem.models;
 
+import dev.emre.librarymanagementsystem.models.enums.BookCondition;
 import dev.emre.librarymanagementsystem.models.enums.Genre;
 
 public class Book {
@@ -9,6 +10,7 @@ public class Book {
     private Genre genre;
     private int totalCopies;
     private int availableCopies;
+    private BookCondition bookCondition = BookCondition.NEW;
 
     public Book(
             String title,
@@ -24,7 +26,18 @@ public class Book {
         this.availableCopies = totalCopies;
 
     }
-
+    public BookCondition getBookCondition() {
+        return bookCondition;
+    }
+    public void setBookCondition(BookCondition bookCondition) {
+        this.bookCondition = bookCondition;
+    }
+    public void decreaseCopies(int numberOfCopies) {
+        availableCopies -= numberOfCopies;
+    }
+    public void markedAsDamaged() {
+        bookCondition = BookCondition.DAMAGED;
+    }
     public String getTitle() {
         return title;
     }
