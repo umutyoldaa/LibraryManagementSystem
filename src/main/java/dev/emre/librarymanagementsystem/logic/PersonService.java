@@ -19,7 +19,7 @@ public class PersonService {
     }
     public void addPerson(Person person){
         if(person == null)return;
-        if(person.getName() == null || person.getSurname() == null || person.getBirthDate() == null || person.getAdress() == null){
+        if(person.getName() == null || person.getSurname() == null || person.getBirthDate() == null || person.getAddress() == null){
             return;
         }
         person.setId(nextId++);

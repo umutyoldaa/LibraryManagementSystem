@@ -58,7 +58,7 @@ public class Loan {
         }
         return false;
     }
-<<<<<<< HEAD
+
     @Override
     public String toString() {
         return "Loan{id=" + id +
@@ -70,7 +70,7 @@ public class Loan {
                 '}';
     }
 
-=======
+
     public BigDecimal calculateFine(LocalDate returnDate, boolean damaged) {
         BigDecimal fee = BigDecimal.ZERO;
         long dayslate = getDaysOverdue(returnDate);
@@ -88,6 +88,6 @@ public class Loan {
         if (!isOverdue(date)) return 0;
         return java.time.temporal.ChronoUnit.DAYS.between(getDueDate(), date);
     }
->>>>>>> main
+
 
 }

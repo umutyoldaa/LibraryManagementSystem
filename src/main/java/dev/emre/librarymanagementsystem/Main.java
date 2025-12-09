@@ -9,73 +9,42 @@ import dev.emre.librarymanagementsystem.models.Loan;
 import dev.emre.librarymanagementsystem.models.Person;
 import dev.emre.librarymanagementsystem.models.enums.Genre;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) {
+        Address address = new Address("erfurt","dresdener","12345");
+        Person p = new Person("Max", "Muster", LocalDate.of(2000,1,1), address);
+        Book b = new Book("Titel", "Autor", Genre.SCIFI, 3);
+
+// Services vorbereiten (je nach deiner Implementierung)
         BookService bookService = new BookService();
         PersonService personService = new PersonService();
-        LoanService loanService = new LoanService(bookService, personService);
-        Person p = new Person();
-        p.setName("Emre");
-        p.setSurname("Kaya");
-        p.setBirthDate(LocalDate.of(1999, 12, 12));
-        Address a = new Address();
-        a.setCity("Kahramanmaras");
-        a.setStreet("Kahramanmaras Cd.");
-        a.setZipCode("34567");
-        p.setAddress(a);
-        personService.addPerson(p);
-        // Alle Personen
-        System.out.println("Alle Personen:");
-        for (Person b : personService.getAllPersons()) {
-            System.out.println(b.getId() + " - " + b.getName() + " " + b.getSurname());
-        }
-        // Suche per ID
-        System.out.println("Suche ID 1: " + personService.getPersonById(1));
-        // Suche per Name
-        System.out.println("Suche Name 'Emre': " + personService.getPersonByName("Anna"));
-        boolean deleted = personService.deletePerson(1);
-        System.out.println("Person 1 gelöscht? " + deleted);
-        System.out.println("Alle Personen nach Löschen: " + personService.getAllPersons().size());
-        Genre genre = Genre.ROMANCE;
-        Book b = new Book();
-        b.setTitle("Clean Code");
-        b.setAuthor("Robert C. Martin");
-        b.setGenre(genre);
-        b.setTotalCopies(3);
+// Person + Book in Services speichern ...
         bookService.addBook(b);
-        Book b2 = new Book();
-        Genre genre1 = Genre.BIOGRAPHY;
-        b2.setTitle("Effective Java");
-        b2.setAuthor("Joshua Bloch");
-        b2.setGenre(genre1);
-        b2.setTotalCopies(2);
-        bookService.addBook(b2);
+        personService.addPerson(p);
 
-        // Alle Bücher
-        System.out.println("Alle Bücher:");
-        for (Book c : bookService.getAllBooks()) {
-            System.out.println(c.getId() + " - " + c.getTitle() + " von " + c.getAuthor());
+        LoanService loanService = new LoanService(bookService, personService);
+
+        Optional<Loan> loanOpt = loanService.createLoan(b.getId(), p.getId(), LocalDate.of(2024,1,1));
+        if (loanOpt.isEmpty()) {
+            System.out.println("Loan konnte nicht erstellt werden");
+            return;
         }
-        // Suche per ID
-        System.out.println("Suche Buch ID 1: " + bookService.getBookById(1));
+        Loan loan = loanOpt.get();
+        System.out.println("Available copies after loan: " + b.getAvailableCopies());
 
-// Löschen
-        boolean deletedBook = bookService.deleteBook(1);
-        System.out.println("Buch 1 gelöscht? " + deletedBook);
-        System.out.println("Alle Bücher nach Löschen: " + bookService.getAllBooks().size());
-        long bookId = b.getId();
-        long personId = p.getId();
-        System.out.println("Person ID: " + p.getId());
-        System.out.println("Book ID: " + b.getId());
-        loanService.createLoan(bookId, personId, LocalDate.now());
-
-        for (Loan loan : loanService.getAllLoans()) {
-            System.out.println(loan);
+        Optional<BigDecimal> feeOpt = loanService.returnBook(loan.getId(), LocalDate.of(2024,2,7), true);
+        if (feeOpt.isEmpty()) {
+            System.out.println("Rückgabe fehlgeschlagen");
+        } else {
+            System.out.println("Fee: " + feeOpt.get());
         }
 
+        System.out.println("Person open fees: " + p.getOpenFees());
 
 
 

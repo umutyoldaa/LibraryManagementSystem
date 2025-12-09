@@ -26,10 +26,9 @@ public class Book {
         this.availableCopies = totalCopies;
 
     }
-<<<<<<< HEAD
-    public Book(){}
 
-=======
+
+
     public BookCondition getBookCondition() {
         return bookCondition;
     }
@@ -42,7 +41,7 @@ public class Book {
     public void markedAsDamaged() {
         bookCondition = BookCondition.DAMAGED;
     }
->>>>>>> main
+
     public String getTitle() {
         return title;
     }
