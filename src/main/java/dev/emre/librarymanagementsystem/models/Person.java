@@ -1,5 +1,6 @@
 package dev.emre.librarymanagementsystem.models;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
@@ -10,6 +11,7 @@ public class Person {
     private String surname;
     private LocalDate birthDate;
     private Address address;
+    private BigDecimal openFees = BigDecimal.ZERO;
 
     public Person(
             String name,
@@ -22,8 +24,12 @@ public class Person {
         this.birthDate = birthDate;
         this.address = address;
     }
-    public Person(){}
-
+    public BigDecimal getOpenFees() {
+        return openFees;
+    }
+    public void setOpenFees(BigDecimal openFees) {
+        this.openFees = openFees;
+    }
     public long getId() {
         return id;
     }
@@ -48,11 +54,23 @@ public class Person {
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
-    public Address getAdress() {
+    public Address getAddress() {
         return address;
     }
     public void setAddress(Address address) {
         this.address = address;
+    }
+    public void addFees(BigDecimal fees) {
+        if(fees == null || fees.compareTo(BigDecimal.ZERO) <= 0 ) return;
+        this.openFees = this.openFees.add(fees);
+    }
+    public void payFees(BigDecimal fees) {
+        if(fees == null || fees.compareTo(BigDecimal.ZERO) <= 0 ) return;
+        this.openFees = this.openFees.subtract(fees);
+        if(this.openFees.compareTo(BigDecimal.ZERO) < 0) this.openFees = BigDecimal.ZERO;
+    }
+    public boolean hasOpenFees() {
+        return openFees != null && this.openFees.compareTo(BigDecimal.ZERO) > 0;
     }
     @Override
     public String toString() {
