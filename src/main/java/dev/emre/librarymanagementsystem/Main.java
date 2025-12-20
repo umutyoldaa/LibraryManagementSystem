@@ -17,18 +17,20 @@ import java.util.Optional;
 public class Main {
     public static void main(String[] args) {
         Address address = new Address("erfurt","dresdener","12345");
-        Person p = new Person("Max", "Muster", LocalDate.of(2000,1,1), address);
-        Book b = new Book("Titel", "Autor", Genre.SCIFI, 3);
-        Book e = new Book("Titel", "Autor", Genre.SCIFI, 3);
+
 
 // Services vorbereiten (je nach deiner Implementierung)
         BookService bookService = new BookService();
         PersonService personService = new PersonService();
-// Person + Book in Services speichern ...
-        bookService.addBook(b);
-        bookService.addBook(e);
-        System.out.println(bookService.getAllBooks());
-        personService.addPerson(p);
+        Book b = bookService.createBook("Haary Pooter", "Autor", Genre.SCIFI, 3);
+        Book e = bookService.createBook("Harry anderson", "Rowling", Genre.SCIFI, 3);
+        Person p = personService.createPerson("Max musterman", "Muster", LocalDate.of(2000,1,1), address);
+
+        System.out.println(bookService.findByGenre(Genre.SCIFI));
+        System.out.println(bookService.findByAuthor("Rowling"));
+        System.out.println(bookService.findByTitle("har"));
+
+        //System.out.println(bookService.getAllBooks());
 
         LoanService loanService = new LoanService(bookService, personService);
 

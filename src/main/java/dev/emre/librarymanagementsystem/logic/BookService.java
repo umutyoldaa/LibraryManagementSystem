@@ -48,4 +48,20 @@ public class BookService {
     public boolean deleteBook(long id){
     return books.removeIf(book -> book.getId() == id);
     }
+    public List<Book> findByGenre(Genre genre){
+        if(genre == null)throw new IllegalArgumentException("Null values are not allowed!");
+        if(books.isEmpty())return new ArrayList<>();
+        return books.stream().filter(book -> book.getGenre() == genre).toList();
+    }
+    public List<Book> findByAuthor(String author){
+        if(author == null)throw new IllegalArgumentException("Null values are not allowed!");
+        if(books.isEmpty())return new ArrayList<>();
+        return books.stream().filter(book -> book.getAuthor().equalsIgnoreCase(author)).toList();
+    }
+    public List<Book> findByTitle(String title){
+        if(title == null)throw new IllegalArgumentException("Null values are not allowed!");
+        if(books.isEmpty())return new ArrayList<>();
+        String needle = title.toLowerCase();
+        return books.stream().filter(book -> book.getTitle() != null && book.getTitle().toLowerCase().contains(needle)).toList();
+    }
 }

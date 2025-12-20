@@ -1,9 +1,12 @@
 package dev.emre.librarymanagementsystem.logic;
 
 import dev.emre.librarymanagementsystem.models.Address;
+import dev.emre.librarymanagementsystem.models.Book;
+import dev.emre.librarymanagementsystem.models.Loan;
 import dev.emre.librarymanagementsystem.models.Person;
 
 import javax.swing.text.html.Option;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,4 +55,19 @@ public class PersonService {
     public Optional<Person> getPersonBySurname(String surname){
         return persons.stream().filter(person -> person.getSurname().equals(surname)).findFirst();
     }
+
+    public List<Person> findByOpenFeesRange(BigDecimal from, BigDecimal to){
+        return persons.stream().filter(person -> person.hasFeesInRange(from, to)).toList();
+    }
+    public List<Person> findByActiveLoanCountRange(int from, int to, LoanService loanService) {
+        return persons.stream()
+                .filter(person -> {
+                    long count = loanService.countActiveLoansForPerson(person.getId());
+                    return count >= from && count <= to;
+                })
+                .toList();
+    }
+
+
+
 }
