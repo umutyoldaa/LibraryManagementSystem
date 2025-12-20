@@ -19,12 +19,15 @@ public class Main {
         Address address = new Address("erfurt","dresdener","12345");
         Person p = new Person("Max", "Muster", LocalDate.of(2000,1,1), address);
         Book b = new Book("Titel", "Autor", Genre.SCIFI, 3);
+        Book e = new Book("Titel", "Autor", Genre.SCIFI, 3);
 
 // Services vorbereiten (je nach deiner Implementierung)
         BookService bookService = new BookService();
         PersonService personService = new PersonService();
 // Person + Book in Services speichern ...
         bookService.addBook(b);
+        bookService.addBook(e);
+        System.out.println(bookService.getAllBooks());
         personService.addPerson(p);
 
         LoanService loanService = new LoanService(bookService, personService);

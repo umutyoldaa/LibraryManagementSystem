@@ -1,8 +1,10 @@
 package dev.emre.librarymanagementsystem.logic;
 
+import dev.emre.librarymanagementsystem.models.Address;
 import dev.emre.librarymanagementsystem.models.Person;
 
 import javax.swing.text.html.Option;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +23,10 @@ public class PersonService {
                 person.setSurname(updated.getSurname());
                 person.setBirthDate(updated.getBirthDate());
                 person.setAddress(updated.getAddress());
+                return true;
             }
         }
-        return true;
+        return false;
     }
     public List<Person> getAllPersons(){
         return new ArrayList<>(persons);
@@ -32,19 +35,19 @@ public class PersonService {
         if(id <= 0)return Optional.empty();
         return persons.stream().filter(person -> person.getId() == id).findFirst();
     }
-    public void addPerson(Person person){
-        if(person == null)return;
-        if(person.getName() == null || person.getSurname() == null || person.getBirthDate() == null || person.getAddress() == null){
-            return;
-        }
-        person.setId(nextId++);
+    public Person createPerson(String name, String surname, LocalDate birthDate, Address address){
+        if(name == null || surname == null || birthDate == null || address == null)throw new IllegalArgumentException("Null values are not allowed!");
+        long id = nextId++;
+        Person person = new Person(id,name, surname, birthDate, address);
         persons.add(person);
+        return person;
     }
     public boolean deletePerson(long id){
         return persons.removeIf(person -> person.getId() == id);
     }
     public Optional<Person> getPersonByName(String name){
-        return persons.stream().filter(person -> person.getName().equals(name)).findFirst();
+        if(name == null)return Optional.empty();
+        return persons.stream().filter(person -> name.equalsIgnoreCase(person.getName())).findFirst();
     }
     public Optional<Person> getPersonBySurname(String surname){
         return persons.stream().filter(person -> person.getSurname().equals(surname)).findFirst();

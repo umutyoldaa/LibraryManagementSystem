@@ -13,11 +13,13 @@ public class Book {
     private BookCondition bookCondition = BookCondition.NEW;
 
     public Book(
+            long id,
             String title,
             String author,
             Genre genre,
             int totalCopies
     ) {
+        this.id = id;
         this.title = title;
         this.author = author;
         this.genre = genre;
@@ -36,12 +38,23 @@ public class Book {
         this.bookCondition = bookCondition;
     }
     public void decreaseCopies(int numberOfCopies) {
+        if(numberOfCopies <= 0) throw new IllegalArgumentException("NUmber of Copies cannot be negative.");
+        if(availableCopies < numberOfCopies) throw new IllegalArgumentException("Not enough copies.");
         availableCopies -= numberOfCopies;
+    }
+    public void increaseCopies(int numberOfCopies) {
+        if(numberOfCopies <= 0) throw new IllegalArgumentException("NUmber of Copies cannot be negative.");
+        if(availableCopies + numberOfCopies > totalCopies) throw new IllegalArgumentException("Not enough room in the library.");
+        availableCopies += numberOfCopies;
     }
     public void markedAsDamaged() {
         bookCondition = BookCondition.DAMAGED;
     }
-
+    public void addCopies(int numberOfCopies) {
+        if(numberOfCopies <= 0) throw new IllegalArgumentException("NUmber of Copies cannot be negative.");
+        totalCopies += numberOfCopies;
+        availableCopies += numberOfCopies;
+    }
     public String getTitle() {
         return title;
     }
@@ -64,9 +77,6 @@ public class Book {
     public int getTotalCopies() {
         return totalCopies;
     }
-    public void setTotalCopies(int totalCopies) {
-        this.totalCopies = totalCopies;
-    }
     public int getAvailableCopies() {
         return availableCopies;
     }
@@ -76,12 +86,9 @@ public class Book {
     public long getId() {
         return id;
     }
-    public void setId(long id) {
-        this.id = id;
-    }
 
     @Override
     public String toString() {
-        return String.format("Titel: %s, Author: %s Genre: %s", title, author, genre);
+        return String.format("\nTitel: %s, Author: %s Genre: %s ", title, author, genre);
     }
 }

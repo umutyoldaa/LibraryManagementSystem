@@ -1,5 +1,7 @@
 package dev.emre.librarymanagementsystem.logic;
 import dev.emre.librarymanagementsystem.models.Book;
+import dev.emre.librarymanagementsystem.models.enums.BookCondition;
+import dev.emre.librarymanagementsystem.models.enums.Genre;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ public class BookService {
                 book.setTitle(updated.getTitle());
                 book.setAuthor(updated.getAuthor());
                 book.setGenre(updated.getGenre());
-                book.setTotalCopies(updated.getTotalCopies());
+                book.addCopies( updated.getTotalCopies() - book.getTotalCopies());
                 book.setAvailableCopies(updated.getAvailableCopies());
                 book.setBookCondition(updated.getBookCondition());
                 return true;
@@ -35,14 +37,13 @@ public class BookService {
         if(id <= 0)return Optional.empty();
         return books.stream().filter(book -> book.getId() == id).findFirst();
     }
-    public boolean addBook(Book book){
-        if(book == null)return false;
-        if(book.getTitle() == null || book.getAuthor() == null || book.getGenre() == null || book.getTotalCopies() <= 0){
-            return false;
-        }
-        book.setId(nextId++);
+    public Book createBook(String title, String author, Genre genre, int totalCopies){
+        if(title == null || author == null || genre == null)throw new IllegalArgumentException("Null values are not allowed!");
+        long id = nextId++;
+        Book book = new Book(id,title,author,genre,totalCopies);
         books.add(book);
-        return true;
+        return book;
+
     }
     public boolean deleteBook(long id){
     return books.removeIf(book -> book.getId() == id);

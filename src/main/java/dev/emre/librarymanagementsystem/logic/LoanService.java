@@ -37,10 +37,12 @@ public class LoanService {
         if(bookOpt.isEmpty() || personOpt.isEmpty()) {
             return Optional.empty();
         }
-        if(bookOpt.get().getAvailableCopies() <= 0)return Optional.empty();
+        Book book = bookOpt.get();
+        if(book.getAvailableCopies() <= 0)return Optional.empty();
+        book.decreaseCopies(1);
         bookOpt.get().setAvailableCopies(bookOpt.get().getAvailableCopies() - 1);
-        Loan loan = new Loan(personOpt.get(), bookOpt.get(), loanDate);
-        loan.setId(nextId++);
+        long id = nextId++;
+        Loan loan = new Loan(id,personOpt.get(), bookOpt.get(), loanDate);
         loans.add(loan);
         return Optional.of(loan);
     }
@@ -61,18 +63,17 @@ public class LoanService {
 
     Loan loan = loanOpt.get();
 
-    BigDecimal fee = loan.calculateFine(returnDate, damaged);
-
     if(!loan.markAsReturned(returnDate)){
         return Optional.empty();
     }
+    BigDecimal fee = loan.calculateFine(damaged);
     loan.getPerson().addFees(fee);
 
     Book book = loan.getBook();
     if(damaged){
         book.markedAsDamaged();
     }
-    book.setAvailableCopies(book.getAvailableCopies() + 1);
+    book.increaseCopies(1);
     return Optional.of(fee);
 
 

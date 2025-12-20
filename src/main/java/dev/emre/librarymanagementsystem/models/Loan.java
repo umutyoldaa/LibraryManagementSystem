@@ -6,13 +6,14 @@ import java.util.Optional;
 
 public class Loan {
     private static final int MAX_LOAN_DAYS = 30;
-    private long id;
+    private final long id;
     private Person person;
     private Book book;
     private LocalDate loanDate;
     private LocalDate returnDate;
     private boolean isReturned;
-    public Loan(Person person, Book book, LocalDate loanDate) {
+    public Loan(long id, Person person, Book book, LocalDate loanDate) {
+        this.id = id;
         this.person = person;
         this.book = book;
         this.loanDate = loanDate;
@@ -21,16 +22,9 @@ public class Loan {
     public long getId() {
         return id;
     }
-    public void setId(long id) {
-        this.id = id;
-    }
     public Person getPerson() {
         return person;
     }
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
     public LocalDate getLoanDate() {
         return loanDate;
     }
@@ -51,12 +45,29 @@ public class Loan {
         return !isReturned && today.isAfter(getDueDate());
     }
     public boolean markAsReturned(LocalDate returnDate) {
-        if (returnDate.isAfter(loanDate)) {
-            this.returnDate = returnDate;
-            isReturned = true;
-            return true;
+        if(returnDate == null) return false;
+        if(returnDate.isBefore(loanDate)) return false;
+        this.returnDate = returnDate;
+        isReturned = true;
+        return true;
+    }
+
+    public BigDecimal calculateFine(boolean damaged) {
+        if(!isReturned || returnDate == null) return BigDecimal.ZERO;
+        BigDecimal fee = BigDecimal.ZERO;
+        long dayslate = getDaysOverdue(returnDate);
+        if(dayslate > 0){
+            long weekLate = (dayslate + 6) / 7;
+            fee = fee.add(BigDecimal.valueOf(weekLate * 2));
         }
-        return false;
+        if(damaged){
+            fee = fee.add(BigDecimal.valueOf(10));
+        }
+        return fee;
+    }
+    public long getDaysOverdue(LocalDate date) {
+        if (!isOverdue(date)) return 0;
+        return java.time.temporal.ChronoUnit.DAYS.between(getDueDate(), date);
     }
 
     @Override
@@ -69,25 +80,4 @@ public class Loan {
                 ", returned=" + isReturned +
                 '}';
     }
-
-
-    public BigDecimal calculateFine(LocalDate returnDate, boolean damaged) {
-        BigDecimal fee = BigDecimal.ZERO;
-        long dayslate = getDaysOverdue(returnDate);
-        if(dayslate > 0){
-          long weekLate = (dayslate + 6) / 7;
-          fee = fee.add(BigDecimal.valueOf(weekLate * 2));
-        }
-        if(damaged){
-            fee = fee.add(BigDecimal.valueOf(10));
-        }
-        return fee;
-
-    }
-    public long getDaysOverdue(LocalDate date) {
-        if (!isOverdue(date)) return 0;
-        return java.time.temporal.ChronoUnit.DAYS.between(getDueDate(), date);
-    }
-
-
 }

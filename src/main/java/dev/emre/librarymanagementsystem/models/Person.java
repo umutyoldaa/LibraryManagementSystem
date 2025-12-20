@@ -14,11 +14,13 @@ public class Person {
     private BigDecimal openFees = BigDecimal.ZERO;
 
     public Person(
+            long id,
             String name,
             String surname,
             LocalDate birthDate,
             Address address
     ){
+        this.id = id;
         this.name = name;
         this.surname = surname;
         this.birthDate = birthDate;
@@ -27,14 +29,8 @@ public class Person {
     public BigDecimal getOpenFees() {
         return openFees;
     }
-    public void setOpenFees(BigDecimal openFees) {
-        this.openFees = openFees;
-    }
     public long getId() {
         return id;
-    }
-    public void setId(long id) {
-        this.id = id;
     }
     public String getName() {
         return name;
@@ -66,11 +62,18 @@ public class Person {
     }
     public void payFees(BigDecimal fees) {
         if(fees == null || fees.compareTo(BigDecimal.ZERO) <= 0 ) return;
-        this.openFees = this.openFees.subtract(fees);
+        if(!hasOpenFees()) return;
+        openFees = openFees.subtract(fees);
         if(this.openFees.compareTo(BigDecimal.ZERO) < 0) this.openFees = BigDecimal.ZERO;
     }
     public boolean hasOpenFees() {
         return openFees != null && this.openFees.compareTo(BigDecimal.ZERO) > 0;
+    }
+    public boolean hasFeesInRange(BigDecimal from, BigDecimal to) {
+        if(!hasOpenFees()) return false;
+        if(from != null && openFees.compareTo(from) < 0) return false;
+        if(to != null && openFees.compareTo(to) > 0) return false;
+        return true;
     }
     @Override
     public String toString() {
