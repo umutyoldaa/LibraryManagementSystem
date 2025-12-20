@@ -82,4 +82,11 @@ public class LoanService {
         return loans.stream().filter(loan -> loan.getPerson().getId() == personId).toList();
     }
 
+    public long countActiveLoansForPerson(long personId){
+        if (personId <= 0) throw new IllegalArgumentException("Person ID must be greater than 0!");
+        return getLoansByPersonId(personId).stream()
+                .filter(loan -> !loan.isReturned())
+                .count();
+    }
+
 }
