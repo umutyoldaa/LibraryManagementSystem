@@ -73,8 +73,8 @@ public class Loan {
     @Override
     public String toString() {
         return "Loan{id=" + id +
-                ", person=" + person.getName() +
-                ", book=" + book.getTitle() +
+                ", person=" + person.toString() +
+                ", book=" + book.toString() +
                 ", loanDate=" + loanDate +
                 ", dueDate=" + getDueDate() +
                 ", returned=" + isReturned +
