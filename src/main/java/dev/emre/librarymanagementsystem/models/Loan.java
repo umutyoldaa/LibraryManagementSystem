@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
+/**
+ * Represents a single book loan between a person and a book.
+ * including the loan date, due date, return date, etc.
+ */
 public class Loan {
     private static final int MAX_LOAN_DAYS = 30;
     private final long id;
@@ -41,9 +45,21 @@ public class Loan {
     public boolean isReturned() {
         return isReturned;
     }
+
+    /**
+     * Checks if the loan is overdue.
+     * @param today     date to check
+     * @return true if the loan is overdue, false otherwise
+     */
     public boolean isOverdue(LocalDate today) {
         return !isReturned && today.isAfter(getDueDate());
     }
+
+    /**
+     * Marks the loan as returned.
+     * @param returnDate    date of return
+     * @return true if the loan was marked as returned, false otherwise
+     */
     public boolean markAsReturned(LocalDate returnDate) {
         if(returnDate == null) return false;
         if(returnDate.isBefore(loanDate)) return false;
@@ -52,6 +68,11 @@ public class Loan {
         return true;
     }
 
+    /**
+     * Calculates the fine for this loan based on delay and book condition.
+     * @param damaged   condition of the book after return
+     * @return a BigDecimal representing the fine, or 0 if the loan is not returned yet
+     */
     public BigDecimal calculateFine(boolean damaged) {
         if(!isReturned || returnDate == null) return BigDecimal.ZERO;
         BigDecimal fee = BigDecimal.ZERO;
@@ -65,6 +86,12 @@ public class Loan {
         }
         return fee;
     }
+
+    /**
+     * Returns the number of days the loan is overdue.
+     * @param date  date to check
+     * @return the number of days the loan is overdue, or 0 if the loan is not overdue
+     */
     public long getDaysOverdue(LocalDate date) {
         if (!isOverdue(date)) return 0;
         return java.time.temporal.ChronoUnit.DAYS.between(getDueDate(), date);
