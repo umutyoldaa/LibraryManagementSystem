@@ -7,6 +7,7 @@ import dev.emre.librarymanagementsystem.models.Address;
 import dev.emre.librarymanagementsystem.models.Book;
 import dev.emre.librarymanagementsystem.models.Loan;
 import dev.emre.librarymanagementsystem.models.Person;
+import dev.emre.librarymanagementsystem.models.enums.BookCondition;
 import dev.emre.librarymanagementsystem.models.enums.Genre;
 
 import java.math.BigDecimal;
@@ -16,42 +17,43 @@ import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) {
-        Address address = new Address("erfurt","dresdener","12345");
-
-
-// Services vorbereiten (je nach deiner Implementierung)
-        BookService bookService = new BookService();
         PersonService personService = new PersonService();
-        Book b = bookService.createBook("Haary Pooter", "Autor", Genre.SCIFI, 3);
-        Book e = bookService.createBook("Harry anderson", "Rowling", Genre.SCIFI, 3);
-        Person p = personService.createPerson("Max musterman", "Muster", LocalDate.of(2000,1,1), address);
-
-        System.out.println(bookService.findByGenre(Genre.SCIFI));
-        System.out.println(bookService.findByAuthor("Rowling"));
-        System.out.println(bookService.findByTitle("har"));
-
-        //System.out.println(bookService.getAllBooks());
-
+        BookService bookService = new BookService();
         LoanService loanService = new LoanService(bookService, personService);
 
-        Optional<Loan> loanOpt = loanService.createLoan(b.getId(), p.getId(), LocalDate.of(2024,1,1));
-        if (loanOpt.isEmpty()) {
-            System.out.println("Loan konnte nicht erstellt werden");
-            return;
-        }
-        Loan loan = loanOpt.get();
-        System.out.println("Available copies after loan: " + b.getAvailableCopies());
+        Person p1 = personService.createPerson(
+                "Emre", "Kocyatagi",
+                LocalDate.of(1999, 1, 1),
+                new Address("Erfurt", "Straße 1", "99084")
+        );
+        Person p2 = personService.createPerson(
+                "Anna", "Schmidt",
+                LocalDate.of(1995, 5, 10),
+                new Address("Berlin", "Allee 2", "10115")
+        );
+        Person p3 = personService.createPerson(
+                "John", "Doe",
+                LocalDate.of(1990, 3, 20),
+                new Address("Hamburg", "Weg 3", "20095")
+        );
 
-        Optional<BigDecimal> feeOpt = loanService.returnBook(loan.getId(), LocalDate.of(2024,2,7), true);
-        if (feeOpt.isEmpty()) {
-            System.out.println("Rückgabe fehlgeschlagen");
-        } else {
-            System.out.println("Fee: " + feeOpt.get());
-        }
+        Book b1 = bookService.createBook(
+                "Clean Code", "Robert C. Martin",
+                Genre.NONFICTION, 3
+        );
+        Book b2 = bookService.createBook(
+                "Harry Potter", "J. K. Rowling",
+                Genre.FANTASY,  2
+        );
 
-        System.out.println("Person open fees: " + p.getOpenFees());
+        loanService.createLoan(b1.getId(), p1.getId(), LocalDate.now().minusDays(5));
+        loanService.createLoan(b2.getId(), p1.getId(), LocalDate.now().minusDays(1));
+        loanService.createLoan(b1.getId(), p2.getId(), LocalDate.now().minusDays(2));
 
-
-
+        System.out.println("Mit aktiven Loans: " + personService.findPersonsWithActiveLoans(loanService));
+        System.out.println("Ohne aktive Loans: " + personService.findPersonsWithoutActiveLoans(loanService));
+        System.out.println("1–2 aktive Loans: " + personService.findByActiveLoanCountRange(1, 2, loanService));
     }
+
+
 }

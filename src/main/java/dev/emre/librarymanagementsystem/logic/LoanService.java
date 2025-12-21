@@ -88,5 +88,8 @@ public class LoanService {
                 .filter(loan -> !loan.isReturned())
                 .count();
     }
+    public boolean hasActiveLoans(long personId){
+        return countActiveLoansForPerson(personId) > 0;
+    }
 
 }

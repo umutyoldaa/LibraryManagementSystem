@@ -68,6 +68,11 @@ public class PersonService {
                 .toList();
     }
 
-
+    public List<Person> findPersonsWithActiveLoans(LoanService loanService){
+        return persons.stream().filter(person -> loanService.hasActiveLoans(person.getId())).toList();
+    }
+    public List<Person> findPersonsWithoutActiveLoans(LoanService loanService){
+        return persons.stream().filter(person -> !loanService.hasActiveLoans(person.getId())).toList();
+    }
 
 }
