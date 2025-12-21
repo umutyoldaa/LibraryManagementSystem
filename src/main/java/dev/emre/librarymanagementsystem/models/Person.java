@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * Represents a person.
+ */
 public class Person {
     private long id;
     private String name;
@@ -56,19 +59,41 @@ public class Person {
     public void setAddress(Address address) {
         this.address = address;
     }
+
+    /**
+     * Adds a fee to the person's open fees.
+     * @param fees  a fee to add
+     */
     public void addFees(BigDecimal fees) {
         if(fees == null || fees.compareTo(BigDecimal.ZERO) <= 0 ) return;
         this.openFees = this.openFees.add(fees);
     }
+
+    /**
+     * Pays the given fees from the person's open fees.
+     * @param fees  a fee to pay
+     */
     public void payFees(BigDecimal fees) {
         if(fees == null || fees.compareTo(BigDecimal.ZERO) <= 0 ) return;
         if(!hasOpenFees()) return;
         openFees = openFees.subtract(fees);
         if(this.openFees.compareTo(BigDecimal.ZERO) < 0) this.openFees = BigDecimal.ZERO;
     }
+
+    /**
+     * Checks if the person has any open fees.
+     * @return true if the fees are greater than zero, false otherwise
+     */
     public boolean hasOpenFees() {
         return openFees != null && this.openFees.compareTo(BigDecimal.ZERO) > 0;
     }
+
+    /**
+     * Checks if the person has fees in the given range.
+     * @param from  begin of the range
+     * @param to    end of the range
+     * @return true if the person has fees in the given range, false otherwise
+     */
     public boolean hasFeesInRange(BigDecimal from, BigDecimal to) {
         if(!hasOpenFees()) return false;
         if(from != null && openFees.compareTo(from) < 0) return false;
